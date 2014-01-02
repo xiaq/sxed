@@ -34,9 +34,37 @@ type Command struct {
 	Pattern *regexp.Regexp // compiled operand
 }
 
+func (cmd Command) Equals(cmd2 Command) bool {
+	return cmd.Name == cmd2.Name && cmd.Operand == cmd2.Operand
+}
+
 type Chain []Command
 
+func (ch Chain) Equals(ch2 Chain) bool {
+	if len(ch) != len(ch2) {
+		return false
+	}
+	for i, cmd := range ch {
+		if !cmd.Equals(ch2[i]) {
+			return false
+		}
+	}
+	return true
+}
+
 type Program []Chain
+
+func (p Program) Equals(p2 Program) bool {
+	if len(p) != len(p2) {
+		return false
+	}
+	for i, ch := range p {
+		if !ch.Equals(p2[i]) {
+			return false
+		}
+	}
+	return true
+}
 
 type scanner struct {
 	text string
